@@ -186,7 +186,9 @@ function renderDays() {
     const d = new Date(weekStart);
     d.setDate(weekStart.getDate() + i);
     const dow = d.getDay();
-    const isPast = d < today;
+    const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+    const dStr2 = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    const isPast = dStr2 < todayStr;
     const isWorkday = WORK_DAYS.includes(dow);
     const disabled = isPast || !isWorkday;
     const dateStr = d.toISOString().slice(0,10);
@@ -217,7 +219,8 @@ function selectDate(dateStr, dateObj) {
 function renderTimes(dateStr, dateObj) {
   const booked = getBookedSlots();
   const now = new Date();
-  const isToday = dateStr === now.toISOString().slice(0,10);
+  const localDate = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  const isToday = dateStr === localDate;
   const currentHour = now.getHours();
 
   const grid = document.getElementById('times-grid');
@@ -227,7 +230,7 @@ function renderTimes(dateStr, dateObj) {
 
   SLOTS.forEach(t => {
     const hour = parseInt(t);
-    const isPast = isToday && hour <= currentHour;
+    const isPast = isToday && hour < currentHour;
     const isBooked = booked[dateStr + '_' + t];
     const el = document.createElement('div');
     el.className = 'time-slot' + (isPast || isBooked ? ' booked' : '') + (t === selectedTime ? ' selected' : '');
@@ -279,7 +282,7 @@ function toast(msg) {
   t._t = setTimeout(() => t.classList.remove('on'), 3000);
 }
 
-function submitBooking() {
+async function submitBooking() {
   const name = document.getElementById('f-name').value.trim();
   const phone = document.getElementById('f-phone').value.trim();
   const expert = document.getElementById('f-expert').value.trim();
@@ -293,34 +296,29 @@ function submitBooking() {
   if (!request) { toast('Укажите запрос'); return; }
   if (!selectedDate || !selectedTime) { toast('Выберите дату и время'); return; }
 
-  // Save to CRM
+  // Send to Google Sheets
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Отправляем...';
+  
   try {
-    const data = JSON.parse(localStorage.getItem(CRM_KEY) || '{}');
-    if (!data.leads) data.leads = [];
-    if (!data.nid) data.nid = 1;
-    if (!data.stages) data.stages = [{id:'s4',label:'Разбор',emoji:'🚀',color:'#FBBF24',type:'normal'}];
-
-    const razborStage = data.stages.find(s => s.label === 'Разбор') || data.stages.find(s => s.type !== 'won' && s.type !== 'lost') || data.stages[0];
-
-    const d = new Date(selectedDate);
-    const monthIdx = d.getMonth();
-
-    data.leads.push({
-      id: data.nid++,
-      name: name,
-      phone: phone,
-      cid: data.channels?.[0]?.id || 'c1',
-      sid: razborStage?.id || 's4',
-      amt: 0,
-      note: `Эксперт: ${expert} | Доход: ${income} | Запрос: ${request}`,
-      date: new Date().toISOString().slice(0,10),
-      month: monthIdx,
-      bookingDate: selectedDate,
-      bookingTime: selectedTime,
+    await fetch('https://script.google.com/macros/s/AKfycbzMh64dXisZkQ1eVENQTu-KZeFi3PoQCwtIYyIhQwJ5WycpipSJGIo-tn_BRkntHLb3/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        name: name,
+        phone: phone,
+        expert: expert,
+        income: income,
+        request: request,
+        bookingDate: selectedDate,
+        bookingTime: selectedTime,
+      })
     });
-
-    localStorage.setItem(CRM_KEY, JSON.stringify(data));
-  } catch(e) {}
+  } catch(e) {
+    console.log('Sheet error:', e);
+  }
 
   // Show success
   const d = new Date(selectedDate);
