@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>Запись на разбор — Top Expert Consulting</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0D0F14;--bg2:#13161D;--bg3:#1A1E28;--bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.13);--ac:#6EE7B7;--tx:#F1F5F9;--tx2:#94A3B8;--tx3:#64748B;--rd:#F87171}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;padding-bottom:40px}
+.hdr{background:var(--bg2);border-bottom:1px solid var(--bd);padding:0 20px;height:60px;display:flex;align-items:center;gap:12px}
+.lic{width:36px;height:36px;background:linear-gradient(135deg,#6EE7B7,#60A5FA);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.hname{font-size:15px;font-weight:800;color:var(--tx)}
+.hsub{font-size:10px;color:var(--tx3);letter-spacing:.1em;text-transform:uppercase}
+.main{padding:20px 16px;max-width:480px;margin:0 auto}
+.hero{text-align:center;padding:28px 0 24px}
+.hero-title{font-size:26px;font-weight:800;color:var(--tx);line-height:1.2;margin-bottom:10px}
+.hero-sub{font-size:14px;color:var(--tx2);line-height:1.6}
+.step{background:var(--bg2);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:14px}
+.step-title{font-size:13px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.step-num{width:22px;height:22px;background:var(--ac);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+
+/* Date picker */
+.week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.week-nav button{background:var(--bg3);border:1px solid var(--bd2);color:var(--tx2);width:34px;height:34px;border-radius:8px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.week-label{font-size:13px;font-weight:600;color:var(--tx)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.day{padding:8px 4px;text-align:center;border-radius:8px;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.day-name{font-size:9px;font-weight:600;color:var(--tx3);text-transform:uppercase;margin-bottom:4px}
+.day-num{font-size:15px;font-weight:700;color:var(--tx)}
+.day.available:hover{background:var(--bg3);border-color:var(--bd2)}
+.day.selected{background:var(--ac);border-color:var(--ac)}
+.day.selected .day-name,.day.selected .day-num{color:#000}
+.day.disabled{opacity:.3;cursor:default;pointer-events:none}
+.day.today .day-num{color:var(--ac)}
+
+/* Time picker */
+.times{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.time-slot{padding:12px 6px;text-align:center;background:var(--bg3);border:1px solid var(--bd2);border-radius:10px;cursor:pointer;transition:all .15s;font-size:14px;font-weight:600;color:var(--tx2)}
+.time-slot:hover{border-color:var(--ac);color:var(--ac)}
+.time-slot.selected{background:var(--ac);border-color:var(--ac);color:#000}
+.time-slot.booked{opacity:.3;cursor:default;pointer-events:none;text-decoration:line-through}
+.no-date{text-align:center;color:var(--tx3);font-size:13px;padding:20px 0}
+
+/* Form */
+.mf{margin-bottom:12px}
+.mf label{display:block;font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.mi,.mta{width:100%;background:var(--bg3);border:1px solid var(--bd2);color:var(--tx);padding:12px 14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;outline:none;-webkit-appearance:none}
+.mi:focus,.mta:focus{border-color:var(--ac)}
+.mta{resize:none;height:80px;line-height:1.5}
+
+/* Summary */
+.summary{background:var(--bg3);border:1px solid var(--bd2);border-radius:12px;padding:14px;margin-bottom:16px}
+.sum-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd)}
+.sum-row:last-child{border-bottom:none}
+.sum-label{font-size:12px;color:var(--tx3)}
+.sum-value{font-size:13px;font-weight:600;color:var(--tx)}
+
+.btn-book{width:100%;padding:16px;border-radius:12px;border:none;background:var(--ac);color:#000;font-family:'Inter',sans-serif;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.02em}
+.btn-book:disabled{opacity:.4;cursor:default}
+
+/* Success */
+.success{display:none;text-align:center;padding:40px 20px}
+.success.show{display:block}
+.success-icon{font-size:64px;margin-bottom:16px}
+.success-title{font-size:22px;font-weight:800;color:var(--ac);margin-bottom:10px}
+.success-sub{font-size:14px;color:var(--tx2);line-height:1.6}
+.success-card{background:var(--bg2);border:1px solid var(--bd2);border-radius:14px;padding:16px;margin:20px 0;text-align:left}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--rd);color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;z-index:999;white-space:nowrap}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="lic">🎯</div>
+  <div><div class="hname">Top Expert Consulting</div><div class="hsub">Запись на разбор</div></div>
+</div>
+
+<div class="main">
+  <div id="form-section">
+    <div class="hero">
+      <div class="hero-title">Запишись на бесплатный разбор</div>
+      <div class="hero-sub">Разберём твою ситуацию и найдём точки роста. Длительность — 25 минут.</div>
+    </div>
+
+    <!-- Step 1: Date -->
+    <div class="step">
+      <div class="step-title"><div class="step-num">1</div> Выберите дату</div>
+      <div class="week-nav">
+        <button onclick="prevWeek()">‹</button>
+        <div class="week-label" id="week-label"></div>
+        <button onclick="nextWeek()">›</button>
+      </div>
+      <div class="days" id="days-grid"></div>
+    </div>
+
+    <!-- Step 2: Time -->
+    <div class="step" id="time-step">
+      <div class="step-title"><div class="step-num">2</div> Выберите время</div>
+      <div id="times-grid"><div class="no-date">Сначала выберите дату</div></div>
+    </div>
+
+    <!-- Step 3: Form -->
+    <div class="step" id="form-step">
+      <div class="step-title"><div class="step-num">3</div> Ваши данные</div>
+      <div class="mf"><label>Имя *</label><input class="mi" id="f-name" placeholder="Ваше имя" autocomplete="off"></div>
+      <div class="mf"><label>Телефон / WhatsApp *</label><input class="mi" id="f-phone" placeholder="+7 900 000 00 00" autocomplete="off"></div>
+      <div class="mf"><label>Кто вы? Чем занимаетесь? *</label><textarea class="mta" id="f-expert" placeholder="Например: коуч, онлайн-тренер, психолог..."></textarea></div>
+      <div class="mf"><label>Доход сейчас (точка А) *</label><input class="mi" id="f-income" placeholder="Например: 300 000 ₸ в месяц" autocomplete="off"></div>
+      <div class="mf"><label>Главный запрос *</label><textarea class="mta" id="f-request" placeholder="Что хотите решить или улучшить?"></textarea></div>
+    </div>
+
+    <!-- Summary & Submit -->
+    <div id="summary-section" style="display:none">
+      <div class="summary" id="summary"></div>
+      <button class="btn-book" onclick="submitBooking()" id="btn-submit">Записаться на разбор ✓</button>
+    </div>
+  </div>
+
+  <!-- Success screen -->
+  <div class="success" id="success-screen">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">Вы записаны!</div>
+    <div class="success-sub">Ждём вас на разборе. Мы свяжемся с вами для подтверждения.</div>
+    <div class="success-card" id="success-details"></div>
+    <div class="success-sub" style="margin-top:16px;font-size:13px">Если нужно перенести — напишите нам в WhatsApp</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CRM_KEY = 'tec_v8';
+const DAYS_RU = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+const MONTHS_RU = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const MONTHS_SHORT = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+const WORK_DAYS = [1,2,3,4,5,6]; // Пн-Сб
+const SLOTS = ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+
+let weekOffset = 0;
+let selectedDate = null;
+let selectedTime = null;
+
+// Load booked slots from CRM
+function getBookedSlots() {
+  try {
+    const data = JSON.parse(localStorage.getItem(CRM_KEY) || '{}');
+    const booked = {};
+    (data.leads || []).forEach(l => {
+      if (l.bookingDate && l.bookingTime) {
+        const key = l.bookingDate + '_' + l.bookingTime;
+        booked[key] = true;
+      }
+    });
+    return booked;
+  } catch(e) { return {}; }
+}
+
+function getWeekStart() {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const day = today.getDay();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (day === 0 ? 6 : day - 1) + weekOffset * 7);
+  return monday;
+}
+
+function renderDays() {
+  const weekStart = getWeekStart();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const booked = getBookedSlots();
+
+  const endDate = new Date(weekStart);
+  endDate.setDate(weekStart.getDate() + 6);
+  const m1 = MONTHS_SHORT[weekStart.getMonth()];
+  const m2 = MONTHS_SHORT[endDate.getMonth()];
+  document.getElementById('week-label').textContent =
+    weekStart.getDate() + ' ' + m1 + (m1 !== m2 ? ' — ' + endDate.getDate() + ' ' + m2 : ' — ' + endDate.getDate() + ' ' + m2);
+
+  const grid = document.getElementById('days-grid');
+  grid.innerHTML = '';
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart);
+    d.setDate(weekStart.getDate() + i);
+    const dow = d.getDay();
+    const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+    const dStr2 = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    const isPast = dStr2 < todayStr;
+    const isWorkday = WORK_DAYS.includes(dow);
+    const disabled = isPast || !isWorkday;
+    const dateStr = d.toISOString().slice(0,10);
+    const isSelected = dateStr === selectedDate;
+    const isToday = d.getTime() === today.getTime();
+
+    // Check if all slots booked
+    const allBooked = !disabled && SLOTS.every(t => booked[dateStr + '_' + t]);
+
+    const el = document.createElement('div');
+    el.className = 'day' + (disabled || allBooked ? ' disabled' : ' available') + (isSelected ? ' selected' : '') + (isToday ? ' today' : '');
+    el.innerHTML = `<div class="day-name">${DAYS_RU[dow]}</div><div class="day-num">${d.getDate()}</div>`;
+    if (!disabled && !allBooked) {
+      el.onclick = () => selectDate(dateStr, d);
+    }
+    grid.appendChild(el);
+  }
+}
+
+function selectDate(dateStr, dateObj) {
+  selectedDate = dateStr;
+  selectedTime = null;
+  renderDays();
+  renderTimes(dateStr, dateObj);
+  updateSummary();
+}
+
+function renderTimes(dateStr, dateObj) {
+  const booked = getBookedSlots();
+  const now = new Date();
+  const localDate = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  const isToday = dateStr === localDate;
+  const currentHour = now.getHours();
+
+  const grid = document.getElementById('times-grid');
+  grid.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'times';
+
+  SLOTS.forEach(t => {
+    const hour = parseInt(t);
+    const isPast = isToday && hour < currentHour;
+    const isBooked = booked[dateStr + '_' + t];
+    const el = document.createElement('div');
+    el.className = 'time-slot' + (isPast || isBooked ? ' booked' : '') + (t === selectedTime ? ' selected' : '');
+    el.textContent = t;
+    if (!isPast && !isBooked) {
+      el.onclick = () => selectTime(t);
+    }
+    wrap.appendChild(el);
+  });
+
+  grid.appendChild(wrap);
+}
+
+function selectTime(t) {
+  selectedTime = t;
+  if (selectedDate) {
+    const d = new Date(selectedDate);
+    renderTimes(selectedDate, d);
+  }
+  updateSummary();
+}
+
+function updateSummary() {
+  const name = document.getElementById('f-name')?.value?.trim();
+  const hasDate = selectedDate && selectedTime;
+
+  if (hasDate) {
+    const d = new Date(selectedDate);
+    const dateStr = d.getDate() + ' ' + MONTHS_RU[d.getMonth()] + ' (' + DAYS_RU[d.getDay()] + ')';
+    document.getElementById('summary').innerHTML = `
+      <div class="sum-row"><span class="sum-label">📅 Дата</span><span class="sum-value">${dateStr}</span></div>
+      <div class="sum-row"><span class="sum-label">⏰ Время</span><span class="sum-value">${selectedTime}</span></div>
+      <div class="sum-row"><span class="sum-label">⏱️ Длительность</span><span class="sum-value">25 минут</span></div>
+    `;
+    document.getElementById('summary-section').style.display = 'block';
+  } else {
+    document.getElementById('summary-section').style.display = 'none';
+  }
+}
+
+function prevWeek() { weekOffset--; renderDays(); }
+function nextWeek() { weekOffset++; renderDays(); }
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('on'), 3000);
+}
+
+async function submitBooking() {
+  const name = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const expert = document.getElementById('f-expert').value.trim();
+  const income = document.getElementById('f-income').value.trim();
+  const request = document.getElementById('f-request').value.trim();
+
+  if (!name) { toast('Введите имя'); return; }
+  if (!phone) { toast('Введите телефон'); return; }
+  if (!expert) { toast('Расскажите чем занимаетесь'); return; }
+  if (!income) { toast('Укажите доход'); return; }
+  if (!request) { toast('Укажите запрос'); return; }
+  if (!selectedDate || !selectedTime) { toast('Выберите дату и время'); return; }
+
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Отправляем...';
+  
+  const msg = `🆕 Новая запись на разбор!
+
+👤 Имя: ${name}
+📱 Телефон: ${phone}
+💼 Специализация: ${expert}
+💰 Доход (точка А): ${income}
+❓ Запрос: ${request}
+
+📅 Дата разбора: ${selectedDate}
+⏰ Время: ${selectedTime}`;
+
+  try {
+    await fetch('https://api.telegram.org/bot8782453657:AAEwGF8--RLMymAJGBkP2pyi04tQ4B69vyw/sendMessage', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        chat_id: '467712172',
+        text: msg
+      })
+    });
+  } catch(e) {
+    console.log('TG error:', e);
+  }
+
+  // Show success
+  const d = new Date(selectedDate);
+  const dateStr = d.getDate() + ' ' + MONTHS_RU[d.getMonth()] + ' (' + DAYS_RU[d.getDay()] + ')';
+  document.getElementById('success-details').innerHTML = `
+    <div class="sum-row"><span class="sum-label">👤 Имя</span><span class="sum-value">${name}</span></div>
+    <div class="sum-row"><span class="sum-label">📅 Дата</span><span class="sum-value">${dateStr}</span></div>
+    <div class="sum-row"><span class="sum-label">⏰ Время</span><span class="sum-value">${selectedTime}</span></div>
+    <div class="sum-row"><span class="sum-label">📱 Контакт</span><span class="sum-value">${phone}</span></div>
+  `;
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('success-screen').classList.add('show');
+  window.scrollTo(0,0);
+}
+
+// Add input listeners for summary update
+['f-name','f-phone','f-expert','f-income','f-request'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', updateSummary);
+});
+
+renderDays();
+</script>
+</body>
+</html>
