@@ -301,20 +301,18 @@ async function submitBooking() {
   btn.textContent = 'Отправляем...';
 
   try {
-    await fetch('https://script.google.com/macros/s/AKfycbyv79coCV1jTmgUy1zl3v8x1Hu7m19Im4W5N_72h5Qk7p6OSJ6zVpRr9DnWKZ98w9Aj/exec', {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        name: name,
-        phone: phone,
-        expert: expert,
-        income: income,
-        request: request,
-        bookingDate: selectedDate,
-        bookingTime: selectedTime
-      })
+    const params = new URLSearchParams({
+      name: name,
+      phone: phone,
+      expert: expert,
+      income: income,
+      request: request,
+      bookingDate: selectedDate,
+      bookingTime: selectedTime
     });
+    const img = new Image();
+    img.src = 'https://script.google.com/macros/s/AKfycbxrQCPFwbOlwL4S2IL_HV-gTtjgIRA0lkF_FY-LMVTjMp4dv1AybxgYRopYYKRSdzdK/exec?' + params.toString();
+    await new Promise(r => setTimeout(r, 2000));
   } catch(e) {
     console.log('Error:', e);
   }
