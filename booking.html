@@ -296,13 +296,12 @@ async function submitBooking() {
   if (!request) { toast('Укажите запрос'); return; }
   if (!selectedDate || !selectedTime) { toast('Выберите дату и время'); return; }
 
-  // Send to Google Sheets
   const btn = document.getElementById('btn-submit');
   btn.disabled = true;
   btn.textContent = 'Отправляем...';
-  
+
   try {
-    await fetch('https://script.google.com/macros/s/AKfycbwb2Bb1E2uViikBZsbNppBNIBBM57mqThBzIp_xEsYhkbGpIzue-WXh4GuSGNZscLSx/exec', {
+    await fetch('https://script.google.com/macros/s/AKfycbyv79coCV1jTmgUy1zl3v8x1Hu7m19Im4W5N_72h5Qk7p6OSJ6zVpRr9DnWKZ98w9Aj/exec', {
       method: 'POST',
       mode: 'no-cors',
       headers: {'Content-Type': 'application/json'},
@@ -313,11 +312,11 @@ async function submitBooking() {
         income: income,
         request: request,
         bookingDate: selectedDate,
-        bookingTime: selectedTime,
+        bookingTime: selectedTime
       })
     });
   } catch(e) {
-    console.log('Sheet error:', e);
+    console.log('Error:', e);
   }
 
   // Show success
