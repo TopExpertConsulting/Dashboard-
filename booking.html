@@ -301,18 +301,19 @@ async function submitBooking() {
   btn.textContent = 'Отправляем...';
 
   try {
-    const params = new URLSearchParams({
-      name: name,
-      phone: phone,
-      expert: expert,
-      income: income,
-      request: request,
-      bookingDate: selectedDate,
-      bookingTime: selectedTime
+    await fetch('https://hook.eu1.make.com/dksvgirqqwgw8vx0uszlr9x9gec7vy8c', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        name: name,
+        phone: phone,
+        expert: expert,
+        income: income,
+        request: request,
+        bookingDate: selectedDate,
+        bookingTime: selectedTime
+      })
     });
-    const img = new Image();
-    img.src = 'https://script.google.com/macros/s/AKfycbxrQCPFwbOlwL4S2IL_HV-gTtjgIRA0lkF_FY-LMVTjMp4dv1AybxgYRopYYKRSdzdK/exec?' + params.toString();
-    await new Promise(r => setTimeout(r, 2000));
   } catch(e) {
     console.log('Error:', e);
   }
