@@ -20,8 +20,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
 .step{background:var(--bg2);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:14px}
 .step-title{font-size:13px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .step-num{width:22px;height:22px;background:var(--ac);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
-
-/* Date picker */
 .week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .week-nav button{background:var(--bg3);border:1px solid var(--bd2);color:var(--tx2);width:34px;height:34px;border-radius:8px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .week-label{font-size:13px;font-weight:600;color:var(--tx)}
@@ -34,40 +32,30 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
 .day.selected .day-name,.day.selected .day-num{color:#000}
 .day.disabled{opacity:.3;cursor:default;pointer-events:none}
 .day.today .day-num{color:var(--ac)}
-
-/* Time picker */
 .times{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
 .time-slot{padding:12px 6px;text-align:center;background:var(--bg3);border:1px solid var(--bd2);border-radius:10px;cursor:pointer;transition:all .15s;font-size:14px;font-weight:600;color:var(--tx2)}
 .time-slot:hover{border-color:var(--ac);color:var(--ac)}
 .time-slot.selected{background:var(--ac);border-color:var(--ac);color:#000}
 .time-slot.booked{opacity:.3;cursor:default;pointer-events:none;text-decoration:line-through}
 .no-date{text-align:center;color:var(--tx3);font-size:13px;padding:20px 0}
-
-/* Form */
 .mf{margin-bottom:12px}
 .mf label{display:block;font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
 .mi,.mta{width:100%;background:var(--bg3);border:1px solid var(--bd2);color:var(--tx);padding:12px 14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;outline:none;-webkit-appearance:none}
 .mi:focus,.mta:focus{border-color:var(--ac)}
 .mta{resize:none;height:80px;line-height:1.5}
-
-/* Summary */
 .summary{background:var(--bg3);border:1px solid var(--bd2);border-radius:12px;padding:14px;margin-bottom:16px}
 .sum-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd)}
 .sum-row:last-child{border-bottom:none}
 .sum-label{font-size:12px;color:var(--tx3)}
 .sum-value{font-size:13px;font-weight:600;color:var(--tx)}
-
 .btn-book{width:100%;padding:16px;border-radius:12px;border:none;background:var(--ac);color:#000;font-family:'Inter',sans-serif;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.02em}
 .btn-book:disabled{opacity:.4;cursor:default}
-
-/* Success */
 .success{display:none;text-align:center;padding:40px 20px}
 .success.show{display:block}
 .success-icon{font-size:64px;margin-bottom:16px}
 .success-title{font-size:22px;font-weight:800;color:var(--ac);margin-bottom:10px}
 .success-sub{font-size:14px;color:var(--tx2);line-height:1.6}
 .success-card{background:var(--bg2);border:1px solid var(--bd2);border-radius:14px;padding:16px;margin:20px 0;text-align:left}
-
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--rd);color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;z-index:999;white-space:nowrap}
 .toast.on{transform:translateX(-50%) translateY(0);opacity:1}
 </style>
@@ -85,7 +73,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
       <div class="hero-sub">Разберём твою ситуацию и найдём точки роста. Длительность — 25 минут.</div>
     </div>
 
-    <!-- Step 1: Date -->
     <div class="step">
       <div class="step-title"><div class="step-num">1</div> Выберите дату</div>
       <div class="week-nav">
@@ -96,13 +83,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
       <div class="days" id="days-grid"></div>
     </div>
 
-    <!-- Step 2: Time -->
     <div class="step" id="time-step">
       <div class="step-title"><div class="step-num">2</div> Выберите время</div>
       <div id="times-grid"><div class="no-date">Сначала выберите дату</div></div>
     </div>
 
-    <!-- Step 3: Form -->
     <div class="step" id="form-step">
       <div class="step-title"><div class="step-num">3</div> Ваши данные</div>
       <div class="mf"><label>Имя *</label><input class="mi" id="f-name" placeholder="Ваше имя" autocomplete="off"></div>
@@ -112,14 +97,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
       <div class="mf"><label>Главный запрос *</label><textarea class="mta" id="f-request" placeholder="Что хотите решить или улучшить?"></textarea></div>
     </div>
 
-    <!-- Summary & Submit -->
     <div id="summary-section" style="display:none">
       <div class="summary" id="summary"></div>
       <button class="btn-book" onclick="submitBooking()" id="btn-submit">Записаться на разбор ✓</button>
     </div>
   </div>
 
-  <!-- Success screen -->
   <div class="success" id="success-screen">
     <div class="success-icon">🎉</div>
     <div class="success-title">Вы записаны!</div>
@@ -132,18 +115,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
 <div class="toast" id="toast"></div>
 
 <script>
+const WEBHOOK_URL = 'https://hook.eu1.make.com/nuoggjx4faaikwz92pk1n2wnzjz9u';
 const CRM_KEY = 'tec_v8';
 const DAYS_RU = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
 const MONTHS_RU = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 const MONTHS_SHORT = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
-const WORK_DAYS = [1,2,3,4,5,6]; // Пн-Сб
+const WORK_DAYS = [1,2,3,4,5,6];
 const SLOTS = ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
 
 let weekOffset = 0;
 let selectedDate = null;
 let selectedTime = null;
 
-// Load booked slots from CRM
 function getBookedSlots() {
   try {
     const data = JSON.parse(localStorage.getItem(CRM_KEY) || '{}');
@@ -177,7 +160,7 @@ function renderDays() {
   const m1 = MONTHS_SHORT[weekStart.getMonth()];
   const m2 = MONTHS_SHORT[endDate.getMonth()];
   document.getElementById('week-label').textContent =
-    weekStart.getDate() + ' ' + m1 + (m1 !== m2 ? ' — ' + endDate.getDate() + ' ' + m2 : ' — ' + endDate.getDate() + ' ' + m2);
+    weekStart.getDate() + ' ' + m1 + ' — ' + endDate.getDate() + ' ' + m2;
 
   const grid = document.getElementById('days-grid');
   grid.innerHTML = '';
@@ -194,8 +177,6 @@ function renderDays() {
     const dateStr = d.toISOString().slice(0,10);
     const isSelected = dateStr === selectedDate;
     const isToday = d.getTime() === today.getTime();
-
-    // Check if all slots booked
     const allBooked = !disabled && SLOTS.every(t => booked[dateStr + '_' + t]);
 
     const el = document.createElement('div');
@@ -254,9 +235,7 @@ function selectTime(t) {
 }
 
 function updateSummary() {
-  const name = document.getElementById('f-name')?.value?.trim();
   const hasDate = selectedDate && selectedTime;
-
   if (hasDate) {
     const d = new Date(selectedDate);
     const dateStr = d.getDate() + ' ' + MONTHS_RU[d.getMonth()] + ' (' + DAYS_RU[d.getDay()] + ')';
@@ -301,24 +280,19 @@ async function submitBooking() {
   btn.textContent = 'Отправляем...';
 
   try {
-    await fetch('https://hook.eu1.make.com/dksvgirqqwgw8vx0uszlr9x9gec7vy8c', {
+    await fetch(WEBHOOK_URL, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        name: name,
-        phone: phone,
-        expert: expert,
-        income: income,
-        request: request,
+        name, phone, expert, income, request,
         bookingDate: selectedDate,
         bookingTime: selectedTime
       })
     });
   } catch(e) {
-    console.log('Error:', e);
+    console.log('Webhook error:', e);
   }
 
-  // Show success
   const d = new Date(selectedDate);
   const dateStr = d.getDate() + ' ' + MONTHS_RU[d.getMonth()] + ' (' + DAYS_RU[d.getDay()] + ')';
   document.getElementById('success-details').innerHTML = `
@@ -332,7 +306,6 @@ async function submitBooking() {
   window.scrollTo(0,0);
 }
 
-// Add input listeners for summary update
 ['f-name','f-phone','f-expert','f-income','f-request'].forEach(id => {
   document.getElementById(id)?.addEventListener('input', updateSummary);
 });
